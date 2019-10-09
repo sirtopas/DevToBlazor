@@ -1,0 +1,44 @@
+@page "/articles"
+@inject HttpClient Http
+
+<h1>Dev.To Articles</h1>
+
+<p>This component grabs the latest articales from <a href="dev.to">dev.to</a>.</p>
+
+@if (articles == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>URL</th>
+                <th>User</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var article in articles)
+            {
+                <tr>
+                    <td>@article.title</td>
+                    <td>@article.description</td>
+                    <td>@article.url</td>
+                    <td>@article.user.username</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    Article[] articles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        articles = await Http.GetJsonAsync<Article[]>("https://dev.to/api/articles");
+    }
+}
